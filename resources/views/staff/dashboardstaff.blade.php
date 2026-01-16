@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.adminstaff')
 
 @section('content')
 <div class="mb-8">
@@ -26,7 +26,7 @@
 
                     @foreach($statuses as $key => $val)
                         <a href="{{ route('staff.dashboard.index', ['status' => $key, 'search' => request('search')]) }}" 
-                           class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all {{ request('status') == $key ? $val['color'].' text-white shadow-md' : 'bg-slate-50 text-slate-500 hover:bg-orange-50' }}">
+                           class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all {{ (request('status') == $key) ? $val['color'].' text-white shadow-md' : 'bg-slate-50 text-slate-500 hover:bg-orange-50' }}">
                             {{ $val['label'] }}
                         </a>
                     @endforeach
@@ -129,21 +129,21 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         @if($pesananTerpilih->status_pesanan == 'menunggu')
-                            <button onclick="openActionModal('batalModal', '{{ route('pesanan.cancel', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('batalModal', '{{ route('staff.pesanan.cancel', $pesananTerpilih->id_pesanan) }}')"
                                     class="h-14 bg-rose-50 text-rose-600 rounded-2xl font-bold text-sm hover:bg-rose-100 transition-all">
                                 ❌ Batalkan
                             </button>
-                            <button onclick="openActionModal('verifyModal', '{{ route('pesanan.verifikasi', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('verifyModal', '{{ route('staff.pesanan.verifikasi', $pesananTerpilih->id_pesanan) }}')"
                                     class="h-14 bg-emerald-500 text-white rounded-2xl font-bold text-sm hover:bg-emerald-600 shadow-lg shadow-emerald-100">
                                 ✅ Verifikasi
                             </button>
                         @elseif($pesananTerpilih->status_pesanan == 'terverifikasi')
-                            <button onclick="openActionModal('prosesModal', '{{ route('pesanan.proses', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('prosesModal', '{{ route('staff.pesanan.proses', $pesananTerpilih->id_pesanan) }}')"
                                     class="col-span-2 h-14 bg-blue-500 text-white rounded-2xl font-bold text-sm hover:bg-blue-600 shadow-lg">
                                 👨‍🍳 Mulai Proses Masak
                             </button>
                         @elseif($pesananTerpilih->status_pesanan == 'diproses')
-                            <button onclick="openActionModal('selesaiModal', '{{ route('pesanan.selesai', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('selesaiModal', '{{ route('staff.pesanan.selesai', $pesananTerpilih->id_pesanan) }}')"
                                     class="col-span-2 h-14 bg-orange-600 text-white rounded-2xl font-bold text-sm hover:bg-orange-700 shadow-lg">
                                 🏁 Pesanan Siap Diambil
                             </button>
