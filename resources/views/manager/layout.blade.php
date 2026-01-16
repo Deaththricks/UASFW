@@ -17,33 +17,66 @@
 <body class="bg-gray-100 min-h-screen flex">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-900 text-white min-h-screen flex flex-col">
+    <aside class="w-64 bg-gray-900 text-gray-200 min-h-screen flex flex-col">
         <div class="p-6 flex-1">
-            <h1 class="text-2xl font-bold mb-8">Manager Panel</h1>
 
-            <ul class="space-y-4">
+            <h1 class="text-2xl font-bold mb-10 text-white">
+                Manager Panel
+            </h1>
+
+            <ul class="space-y-2">
+
+                <!-- Dashboard -->
                 <li>
-                    <a href="{{ url('manager/dashboard') }}" class="hover:text-blue-400">
+                    <a href="{{ url('manager/dashboard') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg
+                    {{ request()->is('manager/dashboard') 
+                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                            : 'hover:bg-gray-800' }}">
                         📊 Dashboard
                     </a>
                 </li>
+
+                <!-- Users -->
                 <li>
-                    <a href="{{ url('manager/users') }}" class="hover:text-blue-400">
+                    <a href="{{ url('manager/users') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg
+                    {{ request()->is('manager/users*') 
+                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                            : 'hover:bg-gray-800' }}">
                         👤 Kelola User
                     </a>
                 </li>
+
+                <!-- Produk -->
                 <li>
-                    <a href="{{ url('manager/produk') }}" class="hover:text-blue-400">
+                    <a href="{{ url('manager/produk') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg
+                    {{ request()->is('manager/produk*') 
+                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                            : 'hover:bg-gray-800' }}">
                         📦 Kelola Produk
                     </a>
                 </li>
+
+                <!-- Kategori -->
                 <li>
-                    <a href="{{ route('manager.kategori.index') }}" class="hover:text-blue-400">
+                    <a href="{{ route('manager.kategori.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg
+                    {{ request()->is('manager/kategori*') 
+                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                            : 'hover:bg-gray-800' }}">
                         🗂️ Kelola Kategori
                     </a>
                 </li>
+
+                <!-- Laporan -->
                 <li>
-                    <a href="{{ url('manager/laporan') }}" class="hover:text-blue-400">
+                    <a href="{{ url('manager/laporan') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg
+                    {{ request()->is('manager/laporan*') 
+                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                            : 'hover:bg-gray-800' }}">
                         📈 Laporan Penjualan
                     </a>
                 </li>
@@ -52,20 +85,17 @@
 
                 <!-- Logout -->
                 <li>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="button"
-                            onclick="confirmLogout()"
-                            class="w-full text-left text-red-400 hover:text-red-500">
-                            🚪 Logout
-                        </button>
-                    </form>
+                    <button onclick="confirmLogout()"
+                            class="w-full flex items-center gap-3 px-4 py-2 rounded-lg
+                                text-red-400 hover:bg-red-600/20">
+                        🚪 Logout
+                    </button>
                 </li>
+
             </ul>
         </div>
 
-        <!-- Footer Sidebar -->
-        <div class="p-4 text-sm text-gray-400 border-t border-gray-700">
+        <div class="p-4 text-sm border-t border-gray-700 text-gray-400">
             Login sebagai:<br>
             <span class="font-semibold text-white">
                 {{ auth()->user()->nama_lengkap ?? '-' }}

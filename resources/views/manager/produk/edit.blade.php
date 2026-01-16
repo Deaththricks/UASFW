@@ -52,7 +52,7 @@
         @endif
     </div>
     <div class="col-span-2">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update Produk</button>
+        <button type="submit" class="bg-[#e8b44a] text-white px-4 py-2 rounded">Update Produk</button>
     </div>
 </form>
 @endsection

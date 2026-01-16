@@ -45,14 +45,14 @@
         <input type="password" name="password_confirmation" placeholder="Konfirmasi Password"
             class="w-full border p-2 rounded mb-4" required>
 
-        <button class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+        <button class="w-full bg-[#e8b44a] text-white py-2 rounded hover:bg-[#d9a73f]">
             Daftar
         </button>
     </form>
 
     <p class="text-sm mt-4 text-center">
         Sudah punya akun?
-        <a href="{{ route('login') }}" class="text-blue-600">Login</a>
+        <a href="{{ route('login') }}" class="text-[#e8b44a]">Login</a>
     </p>
 </div>
 

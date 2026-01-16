@@ -20,7 +20,7 @@
     <option value="pelanggan">Pelanggan</option>
 </select>
 
-<button class="bg-blue-600 text-white px-4 py-2 rounded col-span-2">
+<button class="bg-[#e8b44a] text-white px-4 py-2 rounded col-span-2">
     Simpan
 </button>
 </form>

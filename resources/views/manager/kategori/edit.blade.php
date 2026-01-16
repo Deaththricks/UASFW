@@ -19,7 +19,7 @@
 <textarea name="deskripsi_kategori"
           class="border p-2 w-full mb-4">{{ $kategori->deskripsi_kategori }}</textarea>
 
-<button class="bg-green-600 text-white px-4 py-2 rounded">
+<button class="bg-[#e8b44a] text-white px-4 py-2 rounded">
     Update
 </button>
 </form>

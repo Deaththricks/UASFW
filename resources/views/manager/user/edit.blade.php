@@ -23,7 +23,7 @@
     <option value="0" {{ !$user->status?'selected':'' }}>Nonaktif</option>
 </select>
 
-<button class="bg-green-600 text-white px-4 py-2 rounded col-span-2">
+<button class="bg-[#e8b44a] text-white px-4 py-2 rounded col-span-2">
     Update
 </button>
 </form>

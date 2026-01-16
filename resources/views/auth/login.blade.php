@@ -36,14 +36,14 @@
             <input type="password" name="password" class="w-full border p-2 rounded" required>
         </div>
 
-        <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        <button class="w-full bg-[#e8b44a] text-white py-2 rounded hover:bg-[#d9a73f]">
             Login
         </button>
     </form>
 
     <p class="text-sm mt-4 text-center">
         Belum punya akun?
-        <a href="{{ route('register') }}" class="text-blue-600">Daftar</a>
+        <a href="{{ route('register') }}" class="text-[#e8b44a]">Daftar</a>
     </p>
 </div>
 
