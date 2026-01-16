@@ -13,7 +13,7 @@
 
     @if(session('success'))
     <script>
-        Swal.fire('Berhasil', '{{ session('success') }}', 'success');
+        Swal.fire('Berhasil', '{{ session("success") }}', 'success');
     </script>
     @endif
 

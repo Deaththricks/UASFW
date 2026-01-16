@@ -70,7 +70,7 @@
 
             <div class="mt-4 flex gap-2">
                 <!-- Tombol Edit modal -->
-                <button onclick="openEditModal({{ $p->id }}, '{{ $p->nama_produk }}', {{ $p->id_kategori }}, {{ $p->harga }}, {{ $p->stok }}, '{{ $p->deskripsi_produk }}')" class="text-blue-500 text-sm">Edit</button>
+                <button type="button" onclick="openEditModal(this)"data-id="{{ $p->id }}" data-nama="{{ $p->nama_produk }}" data-kategori="{{ $p->id_kategori }}" data-harga="{{ $p->harga }}" data-stok="{{ $p->stok }}" data-deskripsi="{{ $p->deskripsi_produk }}" class="text-blue-500 text-sm">Edi</button>
 
                 <!-- Form Hapus -->
                 <form method="POST" action="{{ route('manager.produk.destroy', $p) }}" onsubmit="return confirm('Yakin hapus produk ini?')" class="inline">

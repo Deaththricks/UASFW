@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Produk;
 use App\Models\Pesanan;
-
+// note dipta -> ini yang kepake yang mana sih
 class DashboardController extends Controller
 {
     public function index()
