@@ -5,7 +5,7 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-gray-800">Daftar Produk</h1>
     <a href="{{ route('manager.produk.create') }}"
-       class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded shadow transition duration-200">
+       class="bg-[#e8b44a] hover:bg-blue-600 text-white px-5 py-2 rounded shadow transition duration-200">
         Tambah Produk
     </a>
 </div>
@@ -30,7 +30,7 @@
 
         <div class="p-4 flex-1 flex flex-col justify-between">
             <div>
-                <h3 class="font-semibold text-lg text-gray-800">
+                <h3 class="font-semibold text-lg text-[#e8b44a]">
                     {{ $p->nama_produk }}
                 </h3>
                 <p class="text-sm text-gray-500 mt-1 truncate">
@@ -42,7 +42,7 @@
             </div>
 
             <div class="mt-3">
-                <p class="font-bold text-blue-600">
+                <p class="font-bold text-[#e8b44a]">
                     Rp {{ number_format($p->harga,0,',','.') }}
                 </p>
                 <p class="text-sm text-gray-600">

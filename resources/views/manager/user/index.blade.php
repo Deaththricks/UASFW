@@ -10,7 +10,7 @@
 @section('content')
 <div class="flex justify-between mb-6">
     <h2 class="text-2xl font-bold">Kelola User</h2>
-    <a href="{{ route('manager.users.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded">
+    <a href="{{ route('manager.users.create') }}" class="bg-[#e8b44a] text-white px-4 py-2 rounded">
         + Tambah User
     </a>
 </div>
@@ -24,11 +24,11 @@
         <option value="staff">Staff</option>
         <option value="pelanggan">Pelanggan</option>
     </select>
-    <button class="bg-gray-700 text-white px-4 rounded">Cari</button>
+    <button class="bg-[#e8b44a] text-white px-4 rounded">Cari</button>
 </form>
 
 <table class="w-full bg-white shadow rounded overflow-hidden">
-    <thead class="bg-gray-200">
+    <thead class="bg-[#e8b44a]">
         <tr>
             <th class="p-3">Username</th>
             <th>Nama</th>

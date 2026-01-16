@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Produk;
 use App\Models\Pesanan;
 // note dipta -> ini yang kepake yang mana sih
-class DashboardController extends Controller
+class ManagerDashboardController extends Controller
 {
     public function index()
     {

@@ -51,7 +51,7 @@
         <img id="preview" class="mt-2 w-32 h-32 object-cover hidden">
     </div>
     <div class="col-span-2">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan Produk</button>
+        <button type="submit" class="bg-[#e8b44a] text-white px-4 py-2 rounded">Simpan Produk</button>
     </div>
 </form>
 @endsection

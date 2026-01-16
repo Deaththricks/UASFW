@@ -1,19 +1,36 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Staff\DashboardStaffController; // DIUBAH
 use App\Http\Controllers\Manager\UserController;
+use App\Http\Controllers\Manager\ManagerDashBoardController;
+use App\Http\Controllers\Manager\DashBoardControllers;
+use App\Http\Controllers\Manager\ProdukController;
+use App\Http\Controllers\Manager\LaporanController;
 use App\Http\Controllers\Manager\DashBoardController;
-use App\Http\Controllers\Manager\ProdukController; 
 use App\Http\Controllers\Manager\KategoriController; 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Staff\DashboardControllers;
-use App\Http\Controllers\Manager\LaporanController;
 use App\Exports\LaporanExport;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerKatalogController;
 use App\Http\Controllers\Customer\CustomerHistoryController;
 use App\Http\Controllers\Customer\CustomerProfileController;
+
+
+Route::prefix('staff')->name('staff.')->group(function () {
+    // Dashboard Routes
+    Route::get('/dashboard', [DashboardStaffController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/{id}', [DashboardStaffController::class, 'show'])->name('dashboard.show');
+    
+    // Pesanan Actions
+    Route::put('/pesanan/verifikasi/{id}', [DashboardStaffController::class, 'verifikasi'])->name('pesanan.verifikasi');
+    Route::put('/pesanan/cancel/{id}', [DashboardStaffController::class, 'cancel'])->name('pesanan.cancel');
+    Route::put('/pesanan/proses/{id}', [DashboardStaffController::class, 'proses'])->name('pesanan.proses');
+    Route::put('/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
+
+});
+
+
 
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
@@ -35,7 +52,7 @@ Route::middleware(['auth', 'role:manager'])
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // DASHBOARD
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
 
     // PRODUK
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
@@ -61,12 +78,12 @@ Route::middleware(['auth', 'role:manager'])
 
 
 Route::prefix('staff')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staff.dashboard.index');
-    Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('staff.dashboard.show');
-    Route::put('/pesanan/verifikasi/{id}', [DashboardController::class, 'verifikasi'])->name('pesanan.verifikasi');
-    Route::put('/pesanan/cancel/{id}', [DashboardController::class, 'cancel'])->name('pesanan.cancel');
-    Route::put('/staff/pesanan/proses/{id}', [DashboardController::class, 'proses'])->name('pesanan.proses');
-    Route::put('/staff/pesanan/selesai/{id}', [DashboardController::class, 'selesai'])->name('pesanan.selesai');
+    Route::get('/dashboard', [DashboardStaffController::class, 'index'])->name('staff.dashboard.index');
+    Route::get('/dashboard/{id}', [DashboardStaffController::class, 'show'])->name('staff.dashboard.show');
+    Route::put('/pesanan/verifikasi/{id}', [DashboardStaffController::class, 'verifikasi'])->name('pesanan.verifikasi');
+    Route::put('/pesanan/cancel/{id}', [DashboardStaffController::class, 'cancel'])->name('pesanan.cancel');
+    Route::put('/staff/pesanan/proses/{id}', [DashboardStaffController::class, 'proses'])->name('pesanan.proses');
+    Route::put('/staff/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
 });
 
 Route::prefix('customer')->group(function () {
