@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('detail_pesanans', function (Blueprint $table) {
             $table->id('id_detail');
-            $table->foreignId('id_pesanan')->constrained('pesanans', 'id_pesanan')->onDelete('cascade');
-            $table->foreignId('id_produk')->constrained('produks', 'id_produk');
+            $table->foreignId('id_pesanan')->constrained('pesanans', 'id_pesanan')->cascadeOnDelete();
+            $table->foreignId('id_produk')->constrained('produks', 'id_produk')->cascadeOnDelete();
             $table->integer('jumlah');
             $table->decimal('subtotal', 15, 2);
             $table->timestamps();
