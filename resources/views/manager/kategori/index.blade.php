@@ -5,7 +5,7 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold">Kelola Kategori</h1>
     <a href="{{ route('manager.kategori.create') }}"
-       class="bg-blue-600 text-white px-4 py-2 rounded">
+       class="bg-[#e8b44a] text-white px-4 py-2 rounded">
         + Tambah Kategori
     </a>
 </div>
@@ -17,7 +17,7 @@
 @endif
 
 <table class="w-full bg-white rounded shadow">
-    <thead class="bg-gray-200">
+    <thead class="bg-[#e8b44a]">
         <tr>
             <th class="p-3 text-left">Nama Kategori</th>
             <th class="text-left">Deskripsi</th>

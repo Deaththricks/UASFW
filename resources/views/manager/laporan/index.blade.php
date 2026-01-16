@@ -5,12 +5,12 @@
 <h1 class="text-2xl font-bold mb-6">Laporan Penjualan</h1>
 
 <div class="grid grid-cols-2 gap-6 mb-6">
-    <div class="bg-white p-4 rounded shadow">
+    <div class="bg-[#e8b44a] p-4 rounded shadow">
         <h3 class="font-semibold">Hari Ini</h3>
         <p>Pendapatan: Rp {{ number_format($pendapatanHari,0,',','.') }}</p>
         <p>Pesanan: {{ $pesananHari }}</p>
     </div>
-    <div class="bg-white p-4 rounded shadow">
+    <div class="bg-[#e8b44a] p-4 rounded shadow">
         <h3 class="font-semibold">Bulan Ini</h3>
         <p>Pendapatan: Rp {{ number_format($pendapatanBulan,0,',','.') }}</p>
         <p>Pesanan: {{ $pesananBulan }}</p>
@@ -31,7 +31,7 @@
 </div>
 
 <table class="w-full bg-white rounded shadow">
-    <thead class="bg-gray-200">
+    <thead class="bg-[#e8b44a]">
         <tr>
             <th class="p-3">ID</th>
             <th class="p-3">Pelanggan</th>
