@@ -11,7 +11,7 @@ class CustomerDashboardController extends Controller
     public function index()
     {
         $products = produk::all();
-        return view ('customer.dashboard', compact('products'));
+        return view ('customer.CustomerDashboard', compact('products'));
     }
 
     public function katalog(){

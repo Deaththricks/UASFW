@@ -2,6 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Staff\DashboardStaffController; // DIUBAH
+use App\Http\Controllers\Manager\UserController;
+use App\Http\Controllers\Manager\ManagerDashBoardController;
+use App\Http\Controllers\Manager\DashBoardControllers;
+use App\Http\Controllers\Manager\ProdukController;
+use App\Http\Controllers\Manager\LaporanController;
+use App\Http\Controllers\Manager\DashBoardController;
+use App\Http\Controllers\Manager\KategoriController; 
+use App\Http\Controllers\Auth\AuthController;
+use App\Exports\LaporanExport;
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerKatalogController;
+use App\Http\Controllers\Customer\CustomerHistoryController;
+use App\Http\Controllers\Customer\CustomerProfileController;
+
 
 Route::prefix('staff')->name('staff.')->group(function () {
     // Dashboard Routes
@@ -14,23 +28,16 @@ Route::prefix('staff')->name('staff.')->group(function () {
     Route::put('/pesanan/proses/{id}', [DashboardStaffController::class, 'proses'])->name('pesanan.proses');
     Route::put('/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
 
-use App\Http\Controllers\Manager\UserController;
-use App\Http\Controllers\Manager\ManagerDashBoardController;
-use App\Http\Controllers\Manager\DashBoardControllers;
-use App\Http\Controllers\Manager\ProdukController;
-use App\Http\Controllers\Manager\LaporanController;
-use App\Http\Controllers\Manager\KategoriController; 
-use App\Http\Controllers\Auth\AuthController;
-use App\Exports\LaporanExport;
+});
+
+
+
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
-
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 Route::middleware(['auth', 'role:manager'])
     ->prefix('manager')
@@ -67,21 +74,16 @@ Route::middleware(['auth', 'role:manager'])
     Route::put('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
-
-use App\Http\Controllers\Staff\DashboardController;
-use App\Http\Controllers\Customer\CustomerDashboardController;
-use App\Http\Controllers\Customer\CustomerKatalogController;
-use App\Http\Controllers\Customer\CustomerHistoryController;
-use App\Http\Controllers\Customer\CustomerProfileController;
+    });
 
 
 Route::prefix('staff')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staff.dashboard.index');
-    Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('staff.dashboard.show');
-    Route::put('/pesanan/verifikasi/{id}', [DashboardController::class, 'verifikasi'])->name('pesanan.verifikasi');
-    Route::put('/pesanan/cancel/{id}', [DashboardController::class, 'cancel'])->name('pesanan.cancel');
-    Route::put('/staff/pesanan/proses/{id}', [DashboardController::class, 'proses'])->name('pesanan.proses');
-    Route::put('/staff/pesanan/selesai/{id}', [DashboardController::class, 'selesai'])->name('pesanan.selesai');
+    Route::get('/dashboard', [DashboardStaffController::class, 'index'])->name('staff.dashboard.index');
+    Route::get('/dashboard/{id}', [DashboardStaffController::class, 'show'])->name('staff.dashboard.show');
+    Route::put('/pesanan/verifikasi/{id}', [DashboardStaffController::class, 'verifikasi'])->name('pesanan.verifikasi');
+    Route::put('/pesanan/cancel/{id}', [DashboardStaffController::class, 'cancel'])->name('pesanan.cancel');
+    Route::put('/staff/pesanan/proses/{id}', [DashboardStaffController::class, 'proses'])->name('pesanan.proses');
+    Route::put('/staff/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
 });
 
 Route::prefix('customer')->group(function () {

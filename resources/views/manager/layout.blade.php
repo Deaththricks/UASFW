@@ -111,7 +111,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil',
-                    text: '{{ session('success') }}',
+                    text: '{{ session("success") }}',
                     timer: 2000,
                     showConfirmButton: false
                 })
