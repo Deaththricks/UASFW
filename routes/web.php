@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Manager\UserController;
-use App\Http\Controllers\Manager\DashBoardController;
+use App\Http\Controllers\Manager\ManagerDashBoardController;
 use App\Http\Controllers\Manager\ProdukController;
 use App\Http\Controllers\Manager\LaporanController;
 use App\Http\Controllers\Manager\KategoriController; 
@@ -33,7 +33,7 @@ Route::middleware(['auth', 'role:manager'])
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // DASHBOARD
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
 
     // PRODUK
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
