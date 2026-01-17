@@ -11,20 +11,20 @@ class KategoriSeeder extends Seeder
     {
         DB::table('kategoris')->insert([
             [
-                'nama_kategori' => 'Makanan',
-                'deskripsi_kategori' => 'Produk makanan',
+                'nama_kategori' => 'Pasty',
+                'deskripsi_kategori' => 'Produk pasty',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kategori' => 'Minuman',
-                'deskripsi_kategori' => 'Produk minuman',
+                'nama_kategori' => 'Cake',
+                'deskripsi_kategori' => 'Produk kue',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kategori' => 'Snack',
-                'deskripsi_kategori' => 'Produk snack',
+                'nama_kategori' => 'Others',
+                'deskripsi_kategori' => 'Produk lainnya',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

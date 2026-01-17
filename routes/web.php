@@ -15,6 +15,7 @@ use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerKatalogController;
 use App\Http\Controllers\Customer\CustomerHistoryController;
 use App\Http\Controllers\Customer\CustomerProfileController;
+use App\Http\Controllers\Customer\CustomerCartController;
 
 
 Route::prefix('staff')->name('staff.')->group(function () {
@@ -86,7 +87,18 @@ Route::prefix('staff')->group(function () {
     Route::put('/staff/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
 });
 
+
+
+
+
 Route::prefix('customer')->group(function () {
-    Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
-    Route::get('/katalog', [CustomerDashboardController::class, 'katalog'])->name('katalog');
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('main.dashboard');
+    Route::get('/product/{id}', [CustomerDashboardController::class, 'ProductShow'])->name('ProductShow');
+    Route::get('/cart', [CustomerCartController::class, 'cartIndex'])->name('cart.index');
+    Route::post('/cart/add/{id}', [CustomerCartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/cart/remove/{id}', [CustomerCartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update/{id}', [CustomerCartController::class, 'update'])->name('cart.update');
+    Route::post('/checkout/process', [CustomerCartController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/debug-clear', function() {session()->forget('cart');return "Cart cleared! Now go back to your dashboard and add a new item.";
+});
 });
