@@ -5,21 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'za Bakery - Checkout</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #F8F4F0; 
+        }
+        .search, .ngga-ada {
+            background-color: #F8F4F0; 
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="header h-16 fixed flex items-center justify-between top-0 left-0 w-full bg-white z-50 px-8 shadow-sm">
-        <div class="identity"><a href="{{ route('main.dashboard') }}"><p class="text-2xl font-bold italic text-gray-800 text-yellow-600">L'ZA BAKERY</p></a></div>
+        <div class="identity"><a href="{{ route('main.dashboard') }}"><p class="text-2xl font-bold text-gray-800 ">L'ZA BAKERY</p></a></div>
         <div class="links flex gap-6 font-semibold text-gray-600">
-            <a href="{{ route('main.dashboard') }}" class="hover:text-yellow-600">Katalog</a>
-            <a href="{{ route('cart.index') }}" class="text-yellow-600 border-b-2 border-yellow-600">Keranjang</a>
+            <a href="{{ route('main.dashboard') }}" class="hover:text-yellow-600">Kembali ke katalog</a>
         </div>
     </div>
 
     @php 
-        $total = 0;
-        foreach(session('cart', []) as $details) { 
-            $total += ($details['price'] ?? 0) * $details['quantity']; 
-        }
+        $total = 0; 
     @endphp
 
     <div class="mainContent pt-32 px-8 lg:px-32 min-h-screen pb-20">
@@ -27,22 +32,36 @@
             
             <div class="lg:col-span-2 space-y-4">
                 <h1 class="text-3xl font-bold mb-6 text-gray-800">Review Pesanan</h1>
+                
                 @forelse(session('cart', []) as $id => $details)
+                    @php 
+                        $itemPrice = $details['price'] ?? 0;
+                        $itemQty = $details['quantity'] ?? 0;
+                        $itemSubtotal = $itemPrice * $itemQty;
+                        $total += $itemSubtotal;
+                    @endphp
+
                     <div class="flex items-center bg-white p-6 rounded-2xl border border-gray-100 justify-between shadow-sm">
                         <div class="flex items-center">
                             <img src="{{ asset('storage/' . $details['image']) }}" class="w-20 h-20 object-cover rounded-xl shadow-sm">
                             <div class="ml-6">
                                 <h3 class="font-bold text-gray-800 text-lg">{{ $details['name'] }}</h3>
-                                <p class="text-yellow-600 font-bold">Rp {{ number_format($details['price'] ?? 0, 0, ',', '.') }}</p>
+                                <p class="text-yellow-600 font-bold">Rp {{ number_format($itemPrice, 0, ',', '.') }}</p>
+                                <p class="text-xs text-gray-400 mt-1">Subtotal: <span class="text-gray-600 font-semibold">Rp {{ number_format($itemSubtotal, 0, ',', '.') }}</span></p>
                             </div>
                         </div>
                         <div class="flex items-center gap-6">
-                            <form action="{{ route('cart.update', $id) }}" method="POST">
+                            <form action="{{ route('cart.update') }}" method="POST">
                                 @csrf
-                                <input type="number" name="quantity" value="{{ $details['quantity'] }}" min="1" onchange="this.form.submit()" class="w-16 border-2 rounded-xl p-2 text-center border-gray-100 focus:border-yellow-500 outline-none transition-all">
+                                @method('PATCH')
+                                <input type="hidden" name="id" value="{{ $id }}"> 
+                                <input type="number" name="quantity" value="{{ $itemQty }}" min="1" onchange="this.form.submit()" class="w-16 border-2 rounded-xl p-2 text-center border-gray-100 focus:border-yellow-500 outline-none transition-all">
                             </form>
-                            <form action="{{ route('cart.remove', $id) }}" method="POST">
-                                @csrf @method('DELETE')
+                            
+                            <form action="{{ route('cart.remove') }}" method="POST">
+                                @csrf 
+                                @method('DELETE')
+                                <input type="hidden" name="id" value="{{ $id }}"> 
                                 <button type="submit" class="text-red-400 hover:text-red-600 transition-colors p-2 bg-red-50 rounded-lg">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                 </button>
@@ -50,7 +69,10 @@
                         </div>
                     </div>
                 @empty
-                    <div class="bg-white p-10 rounded-2xl text-center border border-dashed border-gray-300"><p class="text-gray-400 font-medium">Keranjang Anda masih kosong.</p></div>
+                    <div class="bg-white p-10 rounded-2xl text-center border border-dashed border-gray-300">
+                        <p class="text-gray-400 font-medium">Keranjang Anda masih kosong.</p>
+                        <a href="{{ route('main.dashboard') }}" class="text-yellow-600 font-bold mt-2 block">Kembali Belanja</a>
+                    </div>
                 @endforelse
             </div>
 
@@ -60,9 +82,16 @@
                     <div id="step-pemesan">
                         <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-4">Data Pemesan</h2>
                         <div class="space-y-4">
-                            <input type="text" id="nama" placeholder="Nama Lengkap" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all">
-                            <input type="tel" id="telepon" placeholder="Nomor Telepon" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all">
-                            <textarea id="alamat" rows="2" placeholder="Alamat Pengiriman" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all"></textarea>
+                            <label class="text-sm font-semibold text-gray-600">Nama Lengkap</label>
+                            <input type="text" id="nama" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all">
+                            
+                            <label class="text-sm font-semibold text-gray-600">Nomor Telepon</label> 
+                            <input type="tel" id="telepon" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all">
+                            
+                            <label class="text-sm font-semibold text-gray-600">Alamat</label> 
+                            <textarea id="alamat" rows="2" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all"></textarea>
+                            
+                            <label class="text-sm font-semibold text-gray-600">Tanggal Pengambilan/Pengiriman</label> 
                             <input type="date" id="tanggal" class="w-full border-2 border-gray-100 p-3 rounded-2xl outline-none focus:border-yellow-500 transition-all">
                             
                             <div class="pt-4 border-t flex justify-between items-center font-bold">
@@ -75,11 +104,11 @@
 
                     <div id="step-pembayaran" class="hidden">
                         <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-4">Metode Pembayaran</h2>
-                        <form action="{{ route('checkout.process') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('customer.order.process') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="nama" id="h-nama"> 
                             <input type="hidden" name="tel" id="h-tel">
-                            <input type="hidden" name="alamat" id="h-alamat"> 
+                            <input type="hidden" name="alamat" id="h-alamat">
                             <input type="hidden" name="tgl" id="h-tgl">
 
                             <div class="space-y-4">
@@ -101,11 +130,27 @@
                                         <input type="text" name="nama_user" placeholder="Atas Nama Pengirim" class="w-full border-2 border-white p-2 rounded-xl text-sm focus:border-yellow-400 outline-none">
                                     </div>
                                 </div>
+
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-4 border-2 rounded-2xl cursor-pointer transition-all border-gray-100" id="label-qris">
+                                        <input type="radio" name="method" value="QRIS" class="hidden" onchange="toggleDetails('qris')">
+                                        <span class="font-bold text-gray-700">QRIS</span>
+                                    </label>
+                                    
+                                    <div id="details-qris" class="hidden p-5 bg-yellow-50 border-2 border-yellow-200 rounded-2xl text-center space-y-3">
+                                        <p class="text-[10px] font-black text-yellow-700 uppercase tracking-widest mb-2">Scan QR Code untuk Pembayaran</p>
+                                        <div class="bg-white p-4 rounded-xl inline-block shadow-sm">
+                                            <img src="{{ asset ('images/qr-kone.png') }}" alt="QRIS Barcode" class="mx-auto w-32 h-32">
+                                            <p class="mt-2 font-bold text-gray-800 text-sm">L'ZA BAKERY</p>
+                                        </div>
+                                        <p class="text-[10px] text-yellow-600 font-medium">Scan QR Code di atas untuk pembayaran dan upload bukti pembayaran di bawah</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="upload-section" class="hidden mt-6 bg-gray-50 p-5 rounded-2xl border-dashed border-2 border-gray-200 text-center">
-                                <p class="text-[10px] font-bold text-gray-500 mb-3 uppercase tracking-tighter">Lampirkan Bukti Transfer</p>
-                                <input type="file" name="bukti" class="text-xs w-full cursor-pointer">
+                                <p class="text-[10px] font-bold text-gray-500 mb-3 uppercase tracking-tighter">Lampirkan Bukti Pembayaran</p>
+                                <input type="file" name="bukti_pembayaran" class="text-xs w-full cursor-pointer">
                             </div>
 
                             <div class="pt-4 mt-6 border-t flex justify-between items-center font-bold">
@@ -132,21 +177,37 @@
             document.getElementById('step-pemesan').classList.add('hidden');
             document.getElementById('step-pembayaran').classList.remove('hidden');
         }
+        
         function goToPemesan() {
             document.getElementById('step-pembayaran').classList.add('hidden');
             document.getElementById('step-pemesan').classList.remove('hidden');
         }
+        
         function toggleDetails(m) {
-            ['cod', 'transfer'].forEach(x => {
+            // Define all available methods
+            const methods = ['cod', 'transfer', 'qris'];
+            
+            methods.forEach(x => {
                 const label = document.getElementById(`label-${x}`);
                 const detail = document.getElementById(`details-${x}`);
+                
+                // Reset styles
                 label.classList.remove('border-yellow-500', 'bg-yellow-50');
                 if(detail) detail.classList.add('hidden');
             });
-            document.getElementById(`label-${m}`).classList.add('border-yellow-500', 'bg-yellow-50');
-            if(document.getElementById(`details-${m}`)) document.getElementById(`details-${m}`).classList.remove('hidden');
+            
+            // Activate selected method
+            const activeLabel = document.getElementById(`label-${m}`);
+            const activeDetail = document.getElementById(`details-${m}`);
+            
+            activeLabel.classList.add('border-yellow-500', 'bg-yellow-50');
+            if(activeDetail) activeDetail.classList.remove('hidden');
+            
+            // Show upload section if method is NOT COD
             document.getElementById('upload-section').classList.toggle('hidden', m === 'cod');
         }
+        
+        // Initial state
         toggleDetails('cod');
     </script>
 </body>

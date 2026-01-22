@@ -5,23 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'za Bakery - {{ $product->nama_produk }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #F8F4F0; 
+        }
+        .search, .ngga-ada {
+            background-color: #F8F4F0; 
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <div class="mainWrapper min-h-screen w-full">
         <div class="header h-16 fixed flex items-center justify-center top-0 left-0 w-full bg-white z-50 px-8 drop-shadow-lg">
             <div class="identity flex items-center flex-row w-1/8">
-                <a href="{{ route('main.dashboard') }}"><p class="text-2xl font-bold">L'ZA BAKERY</p></a>
-            </div>
-            <div class="searchAndOthers flex items-center flex-1 justify-between px-10">
-                <div class="search bg-gray-100 h-8 rounded-xl flex items-center flex-1 px-4">
-                    <input type="text" class="bg-transparent focus:outline-none w-full text-sm" placeholder="Cari Produk...">
-                    <span>🔍</span>
+                <div class="title">
+                    <a href="{{ route('main.dashboard') }}"><p class="text-2xl font-bold">L'ZA BAKERY</p></a>
                 </div>
             </div>
-            <div class="LogIn flex items-center justify-around w-1/4">
-                <a href="{{ route('cart.index') }}" class="text-xl">🛒</a>
-                <a href="{{ route('login') }}">Log In</a>
-                <a href="{{ route('register') }}">Sign In</a>
+
+            <div class="searchAndOthers flex items-center flex-1 justify-between px-10">
+                <div class="search bg-gray-100 h-8 rounded-xl flex items-center flex-1">
+                    <div class="search flex items-center flex-row w-full">
+                        <form action="{{ route('main.dashboard') }}" method="GET" class="pl-4 flex items-center w-full">
+                            <input type="text" name="search" value="{{ request('search') }}" 
+                                class="focus:outline-none w-full bg-transparent text-sm" 
+                                placeholder="Cari Produk...">
+                            <button type="submit" class="pr-4 flex-1 text-gray-500 hover:text-black">🔍</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="LogIn flex items-center justify-end gap-6 w-1/4">
+                <div class="links flex gap-6 font-semibold text-gray-600">
+                    <a href="{{ route('main.dashboard') }}" class="hover:text-yellow-600">Kembali ke katalog</a>
+                </div>
+                <div class="cart relative">
+                    <a href="{{ route('cart.index') }}" class="text-xl">🛒</a>
+                    @if(session('cart') && count(session('cart')) > 0)
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            {{ count(session('cart')) }}
+                        </span>
+                    @endif
+                </div>
+
+                {{-- Authentication Switch --}}
+                @guest
+                    {{-- Shown only when NOT logged in --}}
+                    <div class="logIn">
+                        <a href="{{ route('login') }}" class="hover:text-yellow-500 transition-colors duration-100 font-semibold text-sm">Log In</a>
+                    </div>
+                    <div class="signIn pl-4">
+                        <a href="{{ route('register') }}" class="hover:text-yellow-500 transition-colors duration-100 font-semibold text-sm">Sign In</a>
+                    </div>
+                @endguest
+
+                @auth
+                    {{-- Shown only when logged in --}}
+                    <div class="relative group ml-4">
+                        <button class="flex items-center gap-2 focus:outline-none py-2">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-bold text-xs border border-yellow-200">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <span class="text-sm font-semibold text-gray-700">{{ Auth::user()->name }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div class="absolute right-0 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50">
+                            <div class="px-4 py-1 mb-1">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Akun Saya</p>
+                            </div>
+                            
+                            <a href="{{ route('customer.history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 transition-colors">
+                                Riwayat Pesanan
+                            </a>
+
+                            <hr class="my-1 border-gray-50">
+
+                            <form method="POST" action="{{ route('logout.customer') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 font-bold hover:bg-red-50 transition-colors">
+                                    Keluar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
             </div>
         </div>
 

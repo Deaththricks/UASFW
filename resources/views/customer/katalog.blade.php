@@ -7,6 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <!-- THIS CODE IS NOT USED -->
     <div class="mainWrapper min-h-screen w-full">
         <!-- HEADER DI SINI -->
         <div class="header h-16 fixed flex items-center top-0 left-0 w-full bg-white z-50 px-8  drop-shadow-lg">
@@ -72,8 +73,6 @@
                         </div>
                         @endforeach
                     </div>
-                    
-
                 </div>
             </div>
     </div>

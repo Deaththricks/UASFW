@@ -11,95 +11,106 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerCartController extends Controller
 {
-    public function cartIndex()
+    public function index()
     {
-        $cart = session()->get('cart', []);
-        return view('customer.cart', compact('cart'));
+        return view('customer.cart'); 
     }
 
-    public function addToCart(Request $request, $id)
-    {
-        $product = produk::where('id_produk', $id)->firstOrFail();
-        $cart = session()->get('cart', []);
-        $qtyToAdd = max(1, (int)$request->quantity);
-
-        if(isset($cart[$id])) {
-            $cart[$id]['quantity'] += $qtyToAdd;
-        } else {
-            // WE MUST USE 'price' TO MATCH THE VIEW
-            $cart[$id] = [
-                "name"     => $product->nama_produk,
-                "quantity" => $qtyToAdd,
-                "price"    => $product->harga_produk, 
-                "image"    => $product->gambar_produk
-            ];
-        }
-
-        session()->put('cart', $cart);
-        return redirect()->route('cart.index');
-    }
-
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request){
+    if($request->id && $request->quantity) {
         $cart = session()->get('cart');
-        if(isset($cart[$id])) {
-            $cart[$id]['quantity'] = max(1, (int)$request->quantity);
+        if(isset($cart[$request->id])) {
+            $cart[$request->id]["quantity"] = $request->quantity;
+            session()->put('cart', $cart);
+            session()->flash('success', 'Keranjang diperbarui!');
+        }
+    }
+    return redirect()->back();
+    }
+
+    public function remove(Request $request){
+    if($request->id) {
+        $cart = session()->get('cart');
+        if(isset($cart[$request->id])) {
+            unset($cart[$request->id]);
             session()->put('cart', $cart);
         }
-        return redirect()->back();
+        session()->flash('success', 'Produk dihapus!');
+    }
+    return redirect()->back(); 
     }
 
-    public function remove($id)
-    {
-        $cart = session()->get('cart');
-        if(isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
+    public function addToCart(Request $request, $id) 
+{
+    $product = produk::findOrFail($id); 
+    $cart = session()->get('cart', []);
+    
+    $qty = (int) $request->input('quantity', 1);
+    if(isset($cart[$id])) {
+        $cart[$id]['quantity'] += $qty;
+    } else {
+        $cart[$id] = [
+            "name" => $product->nama_produk,      
+            "quantity" => $qty, 
+            "price" => $product->harga,                   
+            "image" => $product->gambar_produk    
+        ];
+    }
+
+    session()->put('cart', $cart);
+    return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang!');
+ 
+
+    }
+
+    public function ProcessOrder(Request $request)
+{
+    // 1. Get the payment method from the radio buttons (named 'method' in your Blade)
+    $metode = $request->input('method'); 
+
+    $path = null;
+
+    // 2. Conditional File Upload: Only require file if method is NOT COD
+    if ($metode !== 'COD') {
+        if (!$request->hasFile('bukti_pembayaran')) {
+            return back()->with('error', 'Silahkan upload bukti pembayaran untuk metode ' . $metode);
         }
-        return redirect()->back();
+        $path = $request->file('bukti_pembayaran')->store('payments', 'public');
     }
 
-    public function processCheckout(Request $request)
-    {
-        $request->validate([
-            'method' => 'required',
-            'alamat' => 'required',
+    // 3. Get Cart Data
+    $cart = session()->get('cart', []);
+    if (empty($cart)) {
+        return redirect()->route('cart.index')->with('error', 'Keranjang belanja kosong!');
+    }
+
+    // 4. Calculate Total
+    $total = array_reduce($cart, function($carry, $item) {
+        return $carry + ($item['price'] * $item['quantity']);
+    }, 0);
+
+    // 5. Create Order with dynamic 'metode_pembayaran' and 'alamat' from form
+    $order = \App\Models\pesanan::create([
+        'id_user'           => auth()->id(),
+        'tanggal_pesanan'    => now()->format('Y-m-d'),
+        'total_pembayaran'   => $total,
+        'metode_pembayaran'  => $metode, // Use the variable from input
+        'status_pesanan'     => 'menunggu',
+        'bukti_pembayaran'   => $path, // Will be null for COD
+        'alamat_pengiriman'  => $request->input('alamat') ?? (auth()->user()->alamat ?? 'Alamat tidak tersedia'),
+    ]);
+
+    // 6. Create Details
+    foreach ($cart as $id_produk => $details) {
+        \App\Models\detailpesanan::create([
+            'id_pesanan' => $order->id_pesanan,
+            'id_produk'  => $id_produk,
+            'jumlah'     => $details['quantity'],
+            'subtotal'   => $details['price'] * $details['quantity'],
         ]);
-
-        $cart = session()->get('cart');
-        if (!$cart) return redirect()->back();
-
-        $total = 0;
-        foreach ($cart as $details) {
-            $total += ($details['price'] ?? 0) * $details['quantity'];
-        }
-
-        // CAPTURE THE INTERACTIVE BANK FORM DATA
-        $payment_note = null;
-        if ($request->method == 'Transfer') {
-            $payment_note = "Bank: {$request->bank_user} | Rek: {$request->norek_user} | A/N: {$request->nama_user}";
-        }
-
-        $order = pesanan::create([
-            'id_user'           => Auth::id() ?? 1, 
-            'tanggal_pesanan'   => $request->tgl ?? now(),
-            'total_pembayaran'  => $total,
-            'metode_pembayaran' => $request->method,
-            'status_pesanan'    => 'menunggu', 
-            'alamat_pengiriman' => $request->alamat,
-            'catatan'           => $payment_note, 
-        ]);
-
-        foreach ($cart as $id => $details) {
-            detailpesanan::create([
-                'id_pesanan' => $order->id_pesanan,
-                'id_produk'  => $id,
-                'jumlah'     => $details['quantity'],
-                'subtotal'   => ($details['price'] ?? 0) * $details['quantity'],
-            ]);
-        }
-
-        session()->forget('cart');
-        return redirect()->route('main.dashboard')->with('success_order', 'Berhasil!');
     }
+
+    session()->forget('cart');
+    return redirect()->route('customer.history')->with('success', 'Pesanan berhasil diproses!');
+}
 }

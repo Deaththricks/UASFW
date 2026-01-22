@@ -59,7 +59,8 @@ class AuthController extends Controller
             'password'     => 'required|min:6|confirmed',
         ]);
 
-        User::create([
+        // 1. Create the user
+        $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'user_name'    => $request->user_name,
             'email'        => $request->email,
@@ -70,8 +71,12 @@ class AuthController extends Controller
             'status'       => 1,
         ]);
 
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil, silakan login');
+        // 2. ADD THIS: Log the user in automatically
+        Auth::login($user);
+
+        // 3. CHANGE THIS: Redirect straight to the customer dashboard
+        return redirect()->route('main.dashboard')
+            ->with('success', 'Registrasi berhasil, selamat datang!');
     }
 
     // ===== LOGOUT =====
@@ -83,5 +88,15 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    public function logout2(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('main.dashboard');
     }
 }

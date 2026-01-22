@@ -129,11 +129,11 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         @if($pesananTerpilih->status_pesanan == 'menunggu')
-                            <button onclick="openActionModal('batalModal', '{{ route('staff.pesanan.cancel', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('batalModal', '{{ route('pesanan.cancel', $pesananTerpilih->id_pesanan) }}')"
                                     class="h-14 bg-rose-50 text-rose-600 rounded-2xl font-bold text-sm hover:bg-rose-100 transition-all">
                                 ❌ Batalkan
                             </button>
-                            <button onclick="openActionModal('verifyModal', '{{ route('staff.pesanan.verifikasi', $pesananTerpilih->id_pesanan) }}')"
+                            <button onclick="openActionModal('verifyModal', '{{ route('pesanan.verifikasi', $pesananTerpilih->id_pesanan) }}')"
                                     class="h-14 bg-emerald-500 text-white rounded-2xl font-bold text-sm hover:bg-emerald-600 shadow-lg shadow-emerald-100">
                                 ✅ Verifikasi
                             </button>

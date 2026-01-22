@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'za Bakery - Dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #F8F4F0; 
+        }
+        .search, .ngga-ada {
+            background-color: #F8F4F0; 
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <div class="mainWrapper min-h-screen w-full">
@@ -21,15 +30,16 @@
                     <div class="search flex items-center flex-row w-full">
                         <form action="{{ route('main.dashboard') }}" method="GET" class="pl-4 flex items-center w-full">
                             <input type="text" name="search" value="{{ request('search') }}" 
-                                   class="focus:outline-none w-full bg-transparent text-sm" 
-                                   placeholder="Cari Produk...">
+                                class="focus:outline-none w-full bg-transparent text-sm" 
+                                placeholder="Cari Produk...">
                             <button type="submit" class="pr-4 flex-1 text-gray-500 hover:text-black">🔍</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div class="LogIn flex items-center justify-around w-1/4">
+            <div class="LogIn flex items-center justify-end gap-6 w-1/4">
+                {{-- Cart Icon --}}
                 <div class="cart relative">
                     <a href="{{ route('cart.index') }}" class="text-xl">🛒</a>
                     @if(session('cart') && count(session('cart')) > 0)
@@ -38,17 +48,54 @@
                         </span>
                     @endif
                 </div>
-                <div class="logIn">
-                    <a href="{{ route('login') }}" class="hover:text-yellow-500 transition-colors duration-100">Log In</a>
-                </div>
-                <div class="signIn pl-4">
-                    <a href="{{ route('register') }}" class="hover:text-yellow-500 transition-colors duration-100">Sign In</a>
-                </div>
+
+                {{-- Authentication Switch --}}
+                @guest
+                    {{-- Shown only when NOT logged in --}}
+                    <div class="logIn">
+                        <a href="{{ route('login') }}" class="hover:text-yellow-500 transition-colors duration-100 font-semibold text-sm">Log In</a>
+                    </div>
+                    <div class="signIn pl-4">
+                        <a href="{{ route('register') }}" class="hover:text-yellow-500 transition-colors duration-100 font-semibold text-sm">Sign In</a>
+                    </div>
+                @endguest
+
+                @auth
+                    {{-- Shown only when logged in --}}
+                    <div class="relative group ml-4">
+                        <button class="flex items-center gap-2 focus:outline-none py-2">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-bold text-xs border border-yellow-200">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <span class="text-sm font-semibold text-gray-700">{{ Auth::user()->name }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div class="absolute right-0 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50">
+                            <div class="px-4 py-1 mb-1">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Akun Saya</p>
+                            </div>
+                            
+                            <a href="{{ route('customer.history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 transition-colors">
+                                Riwayat Pesanan
+                            </a>
+
+                            <hr class="my-1 border-gray-50">
+
+                            <form method="POST" action="{{ route('logout.customer') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 font-bold hover:bg-red-50 transition-colors">
+                                    Keluar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
             </div>
         </div>
-
-        <div class="contentBody w-full pt-32 px-8 lg:px-32 min-h-screen bg-[url('/images/BG1.jpg')] bg-cover bg-center bg-fixed">
-            
+        <div class="contentBody w-full pt-32 px-8 lg:px-32 min-h-screen  bg-cover bg-center bg-fixed">
             @if(session('success'))
                 <div id="success-alert" class="max-w-6xl mx-auto mb-6 flex items-center bg-white/90 backdrop-blur border-l-4 border-green-500 p-4 shadow-lg rounded-r-lg">
                     <div class="flex-shrink-0 text-green-500 text-xl">✅</div>
@@ -68,7 +115,7 @@
                 </div>
             </div>
 
-            <div class="catalogue w-full">
+            <div class="catalogue w-full bg0">
                 <div class="category-filter pt-10">
                     <h2 class="text-3xl font-bold mb-6 text-gray-800">Katalog Produk</h2>
                     
@@ -92,7 +139,7 @@
 
                 <div class="Katalog flex flex-row justify-center items-center pt-12">
                     @if($products->isEmpty())
-                        <div class="bg-white/70 backdrop-blur p-12 rounded-xl text-center w-full">
+                        <div class="ngga-ada bg-white/70 backdrop-blur p-12 rounded-xl text-center w-full">
                             <p class="text-xl text-gray-500 italic">Maaf, produk tidak ditemukan.</p>
                             <a href="{{ route('main.dashboard') }}" class="text-yellow-600 font-bold hover:underline">Reset pencarian</a>
                         </div>

@@ -12,10 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-                $middleware->alias([
-            'role' => RoleMiddleware::class,
-        ]);
+            $middleware->alias([
+                'role' => RoleMiddleware::class,
+
+            
+                ]);
+            $middleware->redirectTo(
+                 guests: '/login',           
+                users: '/customer/dashboard' 
+                );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
+    
