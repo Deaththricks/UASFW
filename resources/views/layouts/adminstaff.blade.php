@@ -26,14 +26,13 @@
                     <p class="text-xs text-slate-400 font-medium">Staff Panel</p>
                 </div>
             </div>
-
+            
             <form action="{{ route('staff.dashboard.index') }}" method="GET" class="hidden md:flex items-center bg-[#F3EFEA] rounded-xl px-4 py-2 w-full max-w-md mx-8">
                 @if(request('status'))
                     <input type="hidden" name="status" value="{{ request('status') }}">
                 @endif
                 
                 <span class="text-slate-400 mr-2">🔍</span>
-                
                 <input type="text" 
                     name="search" 
                     value="{{ request('search') }}" 
@@ -59,6 +58,12 @@
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama_lengkap ?? 'Staff') }}&background=5C3D2E&color=fff" 
                     alt="Avatar" 
                     class="w-10 h-10 rounded-full border-2 border-orange-100">
+                <form method="POST" action="{{ route('logout.staff') }}">
+                                @csrf
+                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 font-bold hover:bg-red-50 transition-colors">
+                                Keluar
+                        </button>
+                 </form>
             </div>
 
         </div>

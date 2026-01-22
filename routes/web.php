@@ -42,6 +42,7 @@ Route::get('/register', [AuthController::class, 'registerForm'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout2', [AuthController::class,'logout2'])->name('logout.customer');
+Route::post('/logout3', [AuthController::class,'logout3'])->name('logout.staff');
 
 Route::middleware(['auth', 'role:manager'])
     ->prefix('manager')
