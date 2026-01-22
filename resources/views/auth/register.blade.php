@@ -54,6 +54,7 @@
         Sudah punya akun?
         <a href="{{ route('login') }}" class="text-[#e8b44a]">Login</a>
     </p>
+    <p class="text-sm mt-4 text-center" > Kembali ke <a href="{{ route('main.dashboard') }}" class="text-[#e8b44a]">dashboard</a></p>
 </div>
 
 </body>

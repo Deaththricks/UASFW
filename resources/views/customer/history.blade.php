@@ -39,7 +39,9 @@
             </div>
 
             <div class="LogIn flex items-center justify-end gap-6 w-1/4">
-                {{-- Cart Icon --}}
+                <div class="div">
+                    <a href="{{ route('main.dashboard') }}" class="hover:text-yellow-500 transition-colors duration-100">Return to dashboard</a>
+                </div>
                 <div class="cart relative">
                     <a href="{{ route('cart.index') }}" class="text-xl">🛒</a>
                     @if(session('cart') && count(session('cart')) > 0)
@@ -49,9 +51,9 @@
                     @endif
                 </div>
 
-                {{-- Authentication Switch --}}
+               
                 @guest
-                    {{-- Shown only when NOT logged in --}}
+                   
                     <div class="logIn">
                         <a href="{{ route('login') }}" class="hover:text-yellow-500 transition-colors duration-100 font-semibold text-sm">Log In</a>
                     </div>
@@ -84,7 +86,7 @@
 
                             <hr class="my-1 border-gray-50">
 
-                            <form method="POST" action="{{ route('logout.customer') }}">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 font-bold hover:bg-red-50 transition-colors">
                                     Keluar
@@ -106,83 +108,50 @@
                 </div>
             @endif
 
-            <div class="welcomeCard flex items-center w-full justify-center mb-12">
-                <div class="explore bg-white/40 backdrop-blur-md p-8 rounded-2xl border border-white/30 shadow-sm text-center">
-                    <p class="text-4xl font-bold text-gray-800 uppercase tracking-wide">Selamat Datang di L'ZA BAKERY</p>
-                    <p class="mt-2 text-gray-700 max-w-2xl mx-auto">
-                        Nikmati berbagai kue dan pastry premium yang dibuat dengan cinta dan bahan berkualitas tinggi.
-                    </p>
+            <div class="welcomeCard flex items-center w-full justify-center mb-12 flex flex-col gap-3 ">
+                <div class="explore bg-white/40 backdrop-blur-md p-8 rounded-2xl border border-white/30 shadow-sm text-center  w-3/10">
+                    <p class="text-4xl font-bold text-gray-800 uppercase tracking-wide">L'ZA BAKERY</p>
+                    <p class="mt-2 text-gray-700 max-w-2xl mx-auto">Riwayat Pemesanan</p>
                 </div>
-            </div>
-
-            <div class="catalogue w-full bg0">
-                <div class="category-filter pt-10">
-                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Katalog Produk</h2>
-                    
-                    @if(request('search'))
-                        <p class="mb-4 text-gray-600 italic">Menampilkan hasil pencarian untuk: <strong>"{{ request('search') }}"</strong></p>
-                    @endif
-
-                    <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('main.dashboard', ['category' => 'all', 'search' => request('search')]) }}" 
-                           class="px-6 py-2 rounded-full border transition-all {{ request('category') == 'all' || !request('category') ? 'bg-yellow-500 text-white border-yellow-500 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' }}">
-                            Semua
-                        </a>
-                        @foreach($categories as $cat)
-                            <a href="{{ route('main.dashboard', ['category' => $cat->id_kategori, 'search' => request('search')]) }}" 
-                               class="px-6 py-2 rounded-full border transition-all {{ request('category') == $cat->id_kategori ? 'bg-yellow-500 text-white border-yellow-500 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' }}">
-                                {{ $cat->nama_kategori }}
-                            </a>
+                @foreach ($orders as $order)
+                    <div class="historyItemCard explore bg-white/40 backdrop-blur-md p-8 rounded-2xl border border-white/30 shadow-sm text-center w-3/10 h-fit ">
+                    <div class="idAndStatus flex justify-between py-2 ">
+                        <div class="idAndDate">
+                            <div class="id">
+                                <p>Order id: {{ $order->id_pesanan }}</p>
+                            </div>
+                            <div class="tanggal flex justify-start">
+                                <p class="text-stone-600">{{ $order->tanggal_pesanan }}</p>
+                            </div>
+                        </div>
+                        <div class="status ">
+                            <p>{{ $order->status_pesanan }}</p>
+                        </div>
+                    </div>
+                    <div class="div  py-2 border-t-1 border-b-1 border-stone-200">
+                        <div class="pesananLabel flex justify-start">
+                            <p>Item Pesanan</p>
+                        </div>
+                        @foreach($order->details as $item)
+                        <div class="order  flex justify-start">
+                            <p>- {{ $item->produk->nama_produk ?? 'Produk tidak ditemukan' }} </p><br>
+                            <p>{{ $item->jumlah }}</p>
+                        </div>
                         @endforeach
                     </div>
-                </div>
-
-                <div class="Katalog flex flex-row justify-center items-center pt-12">
-                    @if($products->isEmpty())
-                        <div class="ngga-ada bg-white/70 backdrop-blur p-12 rounded-xl text-center w-full">
-                            <p class="text-xl text-gray-500 italic">Maaf, produk tidak ditemukan.</p>
-                            <a href="{{ route('main.dashboard') }}" class="text-yellow-600 font-bold hover:underline">Reset pencarian</a>
+                    <div class="total flex justify-between py-2">
+                        <div class="totalPemText">
+                            <p>Total Pembayaran</p>
                         </div>
-                    @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-                            @foreach ($products as $product)
-                            <div class="itemCard group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col h-[450px]">
-                                <a href="{{ route('ProductShow', $product->id_produk) }}" class="h-full flex flex-col">
-                                    <div class="productPhoto w-full h-1/2 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                        style="background-image: url('{{ asset("storage/" . $product->gambar_produk) }}');">
-                                    </div>
-
-                                    <div class="productInfo w-full flex flex-col flex-1 p-5">
-                                        <div class="pName">
-                                            <p class="text-xl font-bold text-gray-800">{{ $product->nama_produk }}</p>
-                                        </div>
-
-                                        <div class="pDesc py-3 flex-1">
-                                            <p class="text-sm text-gray-600 line-clamp-3">{{ $product->deskripsi_produk }}</p>
-                                        </div>
-
-                                        <div class="priceAndBuy flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                            <div class="Price">
-                                                <p class="font-bold text-xl text-gray-900">
-                                                    Rp {{ number_format($product->harga, 0, ',', '.') }}
-                                                </p>
-                                            </div>
-                                            <div class="Order bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 transition-colors">
-                                                🛒 Pesan
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            @endforeach
+                        <div class="TotalPemAmm">
+                            <p>Rp {{ number_format($order->total_pembayaran, 0, ',', '.') }}</p>
                         </div>
-                    @endif
+                    </div>
                 </div>
-
-                <div class="pagination pt-12 pb-12 flex justify-center">
-                    {{ $products->links() }}
-                </div>
+                @endforeach
             </div>
+
+            
         </div>
     </div>
 

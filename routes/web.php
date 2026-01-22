@@ -15,6 +15,9 @@ use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerKatalogController;
 use App\Http\Controllers\Customer\CustomerHistoryController;
 use App\Http\Controllers\Customer\CustomerProfileController;
+use App\Http\Controllers\Customer\CustomerCartController;
+use App\Http\Controllers\Customer\CustomerHistroyController;
+use App\Http\Controllers\Customer\CustomerRegistyController;
 
 
 Route::prefix('staff')->name('staff.')->group(function () {
@@ -38,6 +41,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout2', [AuthController::class,'logout2'])->name('logout.customer');
 
 Route::middleware(['auth', 'role:manager'])
     ->prefix('manager')
@@ -86,7 +90,20 @@ Route::prefix('staff')->group(function () {
     Route::put('/staff/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
 });
 
+
+
+
+
 Route::prefix('customer')->group(function () {
-    Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
-    Route::get('/katalog', [CustomerDashboardController::class, 'katalog'])->name('katalog');
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('main.dashboard');
+    Route::get('/product/{id}', [CustomerDashboardController::class, 'ProductShow'])->name('ProductShow');
+    Route::get('/cart', [CustomerCartController::class, 'index'])->name('cart.index');
+    Route::post('/add-to-cart/{id}', [CustomerCartController::class, 'addToCart'])->name('cart.add');
+    Route::patch('/update-cart', [CustomerCartController::class, 'update'])->name('cart.update');
+    Route::delete('/remove-from-cart', [CustomerCartController::class, 'remove'])->name('cart.remove');
+    
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/ProcessOrder', [CustomerCartController::class, 'ProcessOrder'])->name('customer.order.process'); 
+        Route::get('/history', [CustomerHistoryController::class, 'index'])->name('customer.history');
+    });
 });
