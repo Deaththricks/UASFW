@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\staff;
+namespace App\Http\Controllers\Staff; 
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class DashboardStaffController extends Controller 
 {
     public function index(Request $request)
     {
@@ -36,7 +36,7 @@ class DashboardController extends Controller
             $pesananTerpilih = $pesanans->first();
         }
 
-        return view('staff.dashboard', compact('pesanans', 'pesananTerpilih'));
+        return view('staff.dashboardstaff', compact('pesanans', 'pesananTerpilih'));
     }
 
     public function show(Request $request, $id)

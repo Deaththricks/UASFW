@@ -1,15 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Staff\DashboardStaffController; // DIUBAH
+
+Route::prefix('staff')->name('staff.')->group(function () {
+    // Dashboard Routes
+    Route::get('/dashboard', [DashboardStaffController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/{id}', [DashboardStaffController::class, 'show'])->name('dashboard.show');
+    
+    // Pesanan Actions
+    Route::put('/pesanan/verifikasi/{id}', [DashboardStaffController::class, 'verifikasi'])->name('pesanan.verifikasi');
+    Route::put('/pesanan/cancel/{id}', [DashboardStaffController::class, 'cancel'])->name('pesanan.cancel');
+    Route::put('/pesanan/proses/{id}', [DashboardStaffController::class, 'proses'])->name('pesanan.proses');
+    Route::put('/pesanan/selesai/{id}', [DashboardStaffController::class, 'selesai'])->name('pesanan.selesai');
+
 use App\Http\Controllers\Manager\UserController;
 use App\Http\Controllers\Manager\ManagerDashBoardController;
+use App\Http\Controllers\Manager\DashBoardControllers;
 use App\Http\Controllers\Manager\ProdukController;
 use App\Http\Controllers\Manager\LaporanController;
 use App\Http\Controllers\Manager\KategoriController; 
 use App\Http\Controllers\Auth\AuthController;
 use App\Exports\LaporanExport;
 
-// AUTH
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -24,7 +37,6 @@ Route::middleware(['auth', 'role:manager'])
     ->name('manager.')
     ->group(function () {
 
-    // USERS
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -43,13 +55,11 @@ Route::middleware(['auth', 'role:manager'])
     Route::put('/produk/{produk}', [ProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{produk}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
-    // LAPORAN
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/excel', [LaporanController::class, 'exportExcel'])->name('laporan.excel');
     Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
     
 
-    // KATEGORI
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
     Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
@@ -57,4 +67,24 @@ Route::middleware(['auth', 'role:manager'])
     Route::put('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
+
+use App\Http\Controllers\Staff\DashboardController;
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerKatalogController;
+use App\Http\Controllers\Customer\CustomerHistoryController;
+use App\Http\Controllers\Customer\CustomerProfileController;
+
+
+Route::prefix('staff')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staff.dashboard.index');
+    Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('staff.dashboard.show');
+    Route::put('/pesanan/verifikasi/{id}', [DashboardController::class, 'verifikasi'])->name('pesanan.verifikasi');
+    Route::put('/pesanan/cancel/{id}', [DashboardController::class, 'cancel'])->name('pesanan.cancel');
+    Route::put('/staff/pesanan/proses/{id}', [DashboardController::class, 'proses'])->name('pesanan.proses');
+    Route::put('/staff/pesanan/selesai/{id}', [DashboardController::class, 'selesai'])->name('pesanan.selesai');
+});
+
+Route::prefix('customer')->group(function () {
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
+    Route::get('/katalog', [CustomerDashboardController::class, 'katalog'])->name('katalog');
 });
