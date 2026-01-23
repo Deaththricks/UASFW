@@ -29,10 +29,10 @@
                 <!-- Dashboard -->
                 <li>
                     <a href="{{ url('manager/dashboard') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg
-                    {{ request()->is('manager/dashboard') 
-                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
-                            : 'hover:bg-gray-800' }}">
+                       class="flex items-center gap-3 px-4 py-2 rounded-lg
+                       {{ request()->is('manager/dashboard') 
+                           ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                           : 'hover:bg-gray-800' }}">
                         📊 Dashboard
                     </a>
                 </li>
@@ -40,10 +40,10 @@
                 <!-- Users -->
                 <li>
                     <a href="{{ url('manager/users') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg
-                    {{ request()->is('manager/users*') 
-                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
-                            : 'hover:bg-gray-800' }}">
+                       class="flex items-center gap-3 px-4 py-2 rounded-lg
+                       {{ request()->is('manager/users*') 
+                           ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                           : 'hover:bg-gray-800' }}">
                         👤 Kelola User
                     </a>
                 </li>
@@ -51,10 +51,10 @@
                 <!-- Produk -->
                 <li>
                     <a href="{{ url('manager/produk') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg
-                    {{ request()->is('manager/produk*') 
-                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
-                            : 'hover:bg-gray-800' }}">
+                       class="flex items-center gap-3 px-4 py-2 rounded-lg
+                       {{ request()->is('manager/produk*') 
+                           ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                           : 'hover:bg-gray-800' }}">
                         📦 Kelola Produk
                     </a>
                 </li>
@@ -62,10 +62,10 @@
                 <!-- Kategori -->
                 <li>
                     <a href="{{ route('manager.kategori.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg
-                    {{ request()->is('manager/kategori*') 
-                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
-                            : 'hover:bg-gray-800' }}">
+                       class="flex items-center gap-3 px-4 py-2 rounded-lg
+                       {{ request()->is('manager/kategori*') 
+                           ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                           : 'hover:bg-gray-800' }}">
                         🗂️ Kelola Kategori
                     </a>
                 </li>
@@ -73,10 +73,10 @@
                 <!-- Laporan -->
                 <li>
                     <a href="{{ url('manager/laporan') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg
-                    {{ request()->is('manager/laporan*') 
-                            ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
-                            : 'hover:bg-gray-800' }}">
+                       class="flex items-center gap-3 px-4 py-2 rounded-lg
+                       {{ request()->is('manager/laporan*') 
+                           ? 'bg-[#e8b44a] text-gray-900 font-semibold' 
+                           : 'hover:bg-gray-800' }}">
                         📈 Laporan Penjualan
                     </a>
                 </li>
@@ -85,9 +85,10 @@
 
                 <!-- Logout -->
                 <li>
-                    <button onclick="confirmLogout()"
+                    <button type="button"
+                            onclick="confirmLogout()"
                             class="w-full flex items-center gap-3 px-4 py-2 rounded-lg
-                                text-red-400 hover:bg-red-600/20">
+                                   text-red-400 hover:bg-red-600/20">
                         🚪 Logout
                     </button>
                 </li>
@@ -121,6 +122,11 @@
         @yield('content')
         @yield('scripts')
     </main>
+
+    <!-- FORM LOGOUT (WAJIB ADA) -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+        @csrf
+    </form>
 
     <!-- Logout Confirmation -->
     <script>
